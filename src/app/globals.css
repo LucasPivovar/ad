@@ -1,26 +1,567 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Paleta Oficial ACREDTA */
+  --acredta-navy: #021C39;
+  --acredta-green: #01C583;
+  --acredta-ice: #E6EAF7;
+
+  /* Core Brand Variables */
+  --primary: #021C39;
+  --primary-hover: #042b56;
+  --primary-active: #011327;
+  --primary-soft: #E6EAF7;
+  --primary-border: #d0d8ef;
+
+  /* Accent (Verde ACREDTA #01C583) */
+  --accent: #01C583;
+  --accent-hover: #01ab72;
+  --accent-soft: #e3fbf2;
+  --accent-border: #a7f3d9;
+
+  /* Backgrounds & Surfaces */
+  --bg-app: #E6EAF7;
+  --bg-surface: #ffffff;
+  --bg-subtle: #f4f6fc;
+  --bg-muted: #E6EAF7;
+
+  /* Text Hierarchy */
+  --text-main: #021C39;
+  --text-secondary: #334a63;
+  --text-muted: #5c718a;
+  --text-light: #899bb0;
+
+  /* Borders & Dividers */
+  --border-color: #d5dcef;
+  --border-subtle: #E6EAF7;
+
+  /* Status Colors (Alinhados com #01C583) */
+  --success: #009e69;
+  --success-soft: #e3fbf2;
+  --success-border: #9eeed0;
+
+  --warning: #d97706;
+  --warning-soft: #fef3c7;
+  --warning-border: #fde68a;
+
+  --danger: #dc2626;
+  --danger-soft: #fee2e2;
+  --danger-border: #fecaca;
+
+  /* Elevation & Radius */
+  --radius-card: 16px;
+  --radius-btn: 10px;
+  --radius-input: 10px;
+  --shadow-card: 0 2px 6px rgba(2, 28, 57, 0.05), 0 1px 2px rgba(2, 28, 57, 0.03);
+  --shadow-modal: 0 20px 25px -5px rgba(2, 28, 57, 0.15), 0 8px 10px -6px rgba(2, 28, 57, 0.08);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-montserrat), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --color-background: var(--bg-app);
+  --color-foreground: var(--text-main);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-soft: var(--primary-soft);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-surface: var(--bg-surface);
+  --color-subtle: var(--bg-subtle);
+  --color-border-base: var(--border-color);
+  --color-text-main: var(--text-main);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  font-family: var(--font-montserrat), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Tactile Micro-interactions */
+button,
+[role="button"],
+a {
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+button:active:not(:disabled),
+.btn-press:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+/* Mobile Input Zoom Prevention (>= 16px on mobile) */
+input,
+select,
+textarea {
+  font-size: 16px !important;
+}
+
+@media (min-width: 768px) {
+  input,
+  select,
+  textarea {
+    font-size: 14px !important;
+  }
+}
+
+/* Tabular Numerals for Financial Values */
+.num-tabular {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Reusable Semantic Utility Classes */
+.card-surface {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+}
+
+.btn-primary {
+  background-color: var(--accent);
+  color: var(--primary);
+  border-radius: var(--radius-btn);
+  font-weight: 700;
+}
+
+@media (hover: hover) {
+  .btn-primary:hover:not(:disabled) {
+    background-color: var(--accent-hover);
+  }
+}
+
+.btn-navy {
+  background-color: var(--primary);
+  color: #ffffff;
+  border-radius: var(--radius-btn);
+  font-weight: 600;
+}
+
+@media (hover: hover) {
+  .btn-navy:hover:not(:disabled) {
+    background-color: var(--primary-hover);
+  }
+}
+
+.btn-secondary {
+  background-color: var(--bg-surface);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-btn);
+  font-weight: 600;
+}
+
+@media (hover: hover) {
+  .btn-secondary:hover:not(:disabled) {
+    background-color: var(--bg-subtle);
+    border-color: var(--primary);
+  }
+}
+
+.input-field {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-input);
+  color: var(--text-main);
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(1, 197, 131, 0.18);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #b8c4e0;
+  border-radius: 9999px;
+}
+
+/* =====================================================================
+   MOVIMENTO — transições, hovers e animações (fluidez)
+   Regras: só anima transform/opacity/cores; hover isolado em
+   (hover: hover); respeita prefers-reduced-motion.
+   ===================================================================== */
+:root {
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast: 150ms;
+  --dur-base: 220ms;
+  --dur-slow: 420ms;
+}
+
+/* Transição base para todos os botões e links */
+button,
+[role="button"],
+a {
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out),
+    opacity var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+/* Foco visível e acessível */
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Cards e superfícies */
+.card-surface {
+  transition:
+    border-color var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out),
+    transform var(--dur-base) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+
+/* Card clicável: sobe levemente e ganha sombra no hover */
+.card-interactive {
+  cursor: pointer;
+}
+
+.card-interactive:active {
+  transform: scale(0.985);
+}
+
+@media (hover: hover) {
+  .card-interactive:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+    box-shadow: 0 10px 24px -8px rgba(2, 28, 57, 0.18);
+  }
+
+  .card-interactive:hover .icon-chip {
+    background-color: var(--accent);
+    color: var(--primary);
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px -6px rgba(1, 197, 131, 0.55);
+  }
+
+  .btn-navy:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px -6px rgba(2, 28, 57, 0.45);
+  }
+
+  .btn-secondary:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px -8px rgba(2, 28, 57, 0.3);
+  }
+
+  .row-hover:hover {
+    background-color: var(--bg-subtle);
+  }
+
+  .row-hover:hover .row-chevron {
+    transform: translateX(3px);
+    color: var(--primary);
+  }
+}
+
+.icon-chip {
+  transition:
+    background-color var(--dur-base) var(--ease-out),
+    color var(--dur-base) var(--ease-out),
+    transform var(--dur-base) var(--ease-spring);
+}
+
+.row-chevron {
+  transition: transform var(--dur-base) var(--ease-out), color var(--dur-fast) var(--ease-out);
+}
+
+/* Inputs: transição suave no foco */
+.input-field {
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+
+@media (hover: hover) {
+  .input-field:hover:not(:focus) {
+    border-color: var(--text-light);
+  }
+}
+
+/* ---------- Keyframes ---------- */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes expand-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(1, 197, 131, 0.45);
+  }
+  100% {
+    box-shadow: 0 0 0 14px rgba(1, 197, 131, 0);
+  }
+}
+
+/* ---------- Classes de animação ---------- */
+.page-enter {
+  animation: fade-up var(--dur-slow) var(--ease-out) backwards;
+}
+
+.modal-overlay {
+  animation: fade-in var(--dur-base) var(--ease-out) backwards;
+}
+
+.modal-panel {
+  animation: scale-in var(--dur-base) var(--ease-out) backwards;
+}
+
+.dropdown-pop {
+  transform-origin: top right;
+  animation: dropdown-in var(--dur-fast) var(--ease-out) backwards;
+}
+
+.expand-in {
+  animation: expand-in var(--dur-base) var(--ease-out) backwards;
+}
+
+.pop-in {
+  animation: pop-in 520ms var(--ease-out) backwards;
+}
+
+.pulse-ring {
+  animation: pulse-ring 1.8s var(--ease-out) infinite;
+}
+
+/* Entrada escalonada dos filhos diretos (grids e listas) */
+.stagger > * {
+  animation: fade-up var(--dur-slow) var(--ease-out) backwards;
+}
+.stagger > *:nth-child(1) { animation-delay: 0ms; }
+.stagger > *:nth-child(2) { animation-delay: 60ms; }
+.stagger > *:nth-child(3) { animation-delay: 120ms; }
+.stagger > *:nth-child(4) { animation-delay: 180ms; }
+.stagger > *:nth-child(5) { animation-delay: 240ms; }
+.stagger > *:nth-child(n + 6) { animation-delay: 300ms; }
+
+/* Anel de progresso: preenche ao montar */
+.ring-progress {
+  transition: stroke-dashoffset 1100ms var(--ease-out);
+}
+
+/* Barra de progresso */
+.bar-progress {
+  transition: width 700ms var(--ease-out);
+}
+
+/* Acessibilidade: remove movimento para quem prefere */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+
+/* Chevron também reage quando o card inteiro é clicável */
+@media (hover: hover) {
+  .card-interactive:hover .row-chevron {
+    transform: translateX(3px);
+    color: var(--primary);
+  }
+}
+
+/* Troca de aba: apenas fade, para não somar movimento com o stagger */
+.tab-enter {
+  animation: fade-in var(--dur-base) var(--ease-out) backwards;
+}
+
+/* Ilustração do estado vazio: flutuação suave */
+@keyframes float-soft {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.float-soft {
+  animation: float-soft 4s ease-in-out infinite;
+}
+
+/* Biometria Facial — Linha de Laser de Scanner */
+@keyframes scan-laser {
+  0% {
+    top: 6%;
+    opacity: 0.7;
+  }
+  50% {
+    top: 90%;
+    opacity: 1;
+  }
+  100% {
+    top: 6%;
+    opacity: 0.7;
+  }
+}
+
+.scanner-laser {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  height: 2px;
+  background-color: var(--accent);
+  box-shadow: 0 0 12px 3px var(--accent);
+  border-radius: 9999px;
+  animation: scan-laser 2.4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 20;
+}
+
+/* Flash de captura da câmera */
+@keyframes camera-flash {
+  0% { opacity: 0.9; }
+  100% { opacity: 0; }
+}
+
+.camera-flash-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: #ffffff;
+  animation: camera-flash 0.5s ease-out forwards;
+  pointer-events: none;
+  z-index: 30;
+}
+
+/* =====================================================================
+   CURSOR — todo elemento clicável mostra a mãozinha (pointer)
+   (o Tailwind v4 não aplica cursor: pointer em botões por padrão)
+   ===================================================================== */
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]),
+a[href],
+summary,
+select:not(:disabled),
+label[for],
+label:has(input[type="checkbox"]),
+label:has(input[type="radio"]),
+input[type="checkbox"]:not(:disabled),
+input[type="radio"]:not(:disabled),
+input[type="file"],
+input[type="range"],
+.card-interactive,
+.row-hover {
+  cursor: pointer;
+}
+
+button:disabled,
+[aria-disabled="true"],
+input:disabled,
+select:disabled {
+  cursor: not-allowed;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+textarea {
+  cursor: text;
+}
+
+/* Montserrat: números tabulares e ajuste de leitura */
+body {
+  font-optical-sizing: auto;
+  letter-spacing: -0.005em;
 }
