@@ -15,7 +15,7 @@ export function PaymentActionModal({
   directMethod = "pix",
   onClose,
 }: PaymentActionModalProps) {
-  const { agreements, payInstallment, user } = useApp();
+  const { agreements, payInstallment, user, showToast } = useApp();
   const [method, setMethod] = useState<"pix" | "boleto" | "talao">(directMethod);
   const [copied, setCopied] = useState(false);
   const [talaoProvider, setTalaoProvider] = useState<"sanepar" | "copel">("sanepar");
@@ -37,22 +37,27 @@ export function PaymentActionModal({
       ? "82650000002-1 16800002168-3 01102026110-4 84920192000-8"
       : "83670000002-5 16800002168-1 01102026110-9 99381205000-2";
 
-  const handleCopy = (text: string) => {
+  const handleCopy = (text: string, label = "Código") => {
     navigator.clipboard.writeText(text);
     setCopied(true);
+    showToast(`${label} copiado para a área de transferência!`, "info");
     setTimeout(() => setCopied(false), 2000);
   };
 
   const handleConfirmPayment = () => {
-    payInstallment(
-      agr.id,
+    const payMethodName =
       method === "pix"
         ? "PIX"
         : method === "boleto"
         ? "BOLETO"
         : activeProvider === "sanepar"
         ? "TALÃO SANEPAR"
-        : "TALÃO COPEL"
+        : "TALÃO COPEL";
+
+    payInstallment(agr.id, payMethodName);
+    showToast(
+      `Pagamento de ${formatCurrency(agr.installmentValue)} via ${payMethodName} simulado com sucesso!`,
+      "success"
     );
     onClose();
   };
@@ -281,7 +286,7 @@ export function PaymentActionModal({
                       <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" />
                       <span>PARC. {agr.paidInstallments + 1}/{agr.installments} ACORDO ACREDTA ({agr.creditor})</span>
                     </div>
-                    <span className="text-sm num-tabular text-[var(--accent)] font-extrabold">
+                    <span className="text-sm num-tabular text-[var(--primary)] font-extrabold">
                       {formatCurrency(agr.installmentValue)}
                     </span>
                   </div>

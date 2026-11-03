@@ -65,6 +65,15 @@ interface AppContextType {
   preloadCode: string;
   setPreloadCode: (code: string) => void;
 
+  // Feedback e Acessibilidade de Demonstração
+  toastMessage: string | null;
+  toastType: "success" | "info" | "warning";
+  showToast: (msg: string, type?: "success" | "info" | "warning") => void;
+  mobilePreviewOpen: boolean;
+  setMobilePreviewOpen: (open: boolean) => void;
+  flowGuideOpen: boolean;
+  setFlowGuideOpen: (open: boolean) => void;
+
   // Ações de negócio
   linkAgreementByCode: (code: string) => Agreement | null;
   finalizeNewAgreement: () => Agreement;
@@ -304,6 +313,18 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   >("pix_boleto");
   const [concessionaireAccount, setConcessionaireAccount] = useState<string>("8492019-2");
   const [preloadCode, setPreloadCode] = useState<string>("AC-4587962");
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [toastType, setToastType] = useState<"success" | "info" | "warning">("success");
+  const [mobilePreviewOpen, setMobilePreviewOpen] = useState(false);
+  const [flowGuideOpen, setFlowGuideOpen] = useState(false);
+
+  const showToast = (msg: string, type: "success" | "info" | "warning" = "success") => {
+    setToastMessage(msg);
+    setToastType(type);
+    setTimeout(() => {
+      setToastMessage(null);
+    }, 3500);
+  };
 
   const updateUser = (data: Partial<UserProfile>) => {
     setUser((prev) => ({ ...prev, ...data }));
@@ -467,6 +488,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         setConcessionaireAccount,
         preloadCode,
         setPreloadCode,
+        toastMessage,
+        toastType,
+        showToast,
+        mobilePreviewOpen,
+        setMobilePreviewOpen,
+        flowGuideOpen,
+        setFlowGuideOpen,
         linkAgreementByCode,
         finalizeNewAgreement,
         payInstallment,

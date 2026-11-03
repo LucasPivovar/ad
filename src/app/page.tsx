@@ -14,6 +14,9 @@ import { SupportView } from "@/components/SupportView";
 import { OnboardingModal } from "@/components/OnboardingModal";
 import { PaymentActionModal } from "@/components/PaymentActionModal";
 import { AdminDrawer } from "@/components/AdminDrawer";
+import { FlowGuideModal } from "@/components/FlowGuideModal";
+import { MobileSimulatorModal } from "@/components/MobileSimulatorModal";
+import { ToastNotification } from "@/components/ToastNotification";
 
 function AppShell() {
   const { screenFlow, activeTab } = useApp();
@@ -86,6 +89,15 @@ function AppShell() {
         directMethod={paymentModal.directMethod}
         onClose={() => setPaymentModal({ agreementId: null })}
       />
+
+      {/* Guia Autoexplicativo do Produto */}
+      <FlowGuideModal />
+
+      {/* Simulador Mobile em Moldura de Smartphone (Imagem 4) */}
+      <MobileSimulatorModal />
+
+      {/* Notificação Toast Flutuante */}
+      <ToastNotification />
     </div>
   );
 }

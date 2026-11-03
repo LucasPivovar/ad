@@ -26,6 +26,7 @@ export function NegotiateModals() {
     pendingMesaAgreements,
     agreements,
     preloadCode,
+    showToast,
   } = useApp();
 
   const [codeInput, setCodeInput] = useState(preloadCode || "AC-4587962");
@@ -131,16 +132,36 @@ export function NegotiateModals() {
               />
               <i className="bi bi-search text-sm text-[var(--primary)] absolute right-3.5 top-3" />
             </div>
+
+            {/* Helper chips for fast demo */}
+            <div className="mt-2.5 flex items-center gap-1.5 flex-wrap">
+              <span className="text-[10px] text-[var(--text-muted)] font-medium">Atalhos rápidos:</span>
+              <button
+                type="button"
+                onClick={() => setCodeInput("AC-4587962")}
+                className="px-2 py-0.5 rounded bg-[var(--bg-subtle)] border border-[var(--border-color)] text-[10px] font-semibold text-[var(--text-secondary)] hover:text-[var(--primary)] hover:border-[var(--primary)] transition-colors"
+              >
+                AC-4587962 (Itaú • Pix)
+              </button>
+              <button
+                type="button"
+                onClick={() => setCodeInput("AC-7894561")}
+                className="px-2 py-0.5 rounded bg-[var(--bg-subtle)] border border-[var(--border-color)] text-[10px] font-semibold text-[var(--text-secondary)] hover:text-[var(--primary)] hover:border-[var(--primary)] transition-colors"
+              >
+                AC-7894561 (Renner • Sanepar)
+              </button>
+            </div>
           </div>
 
           <button
             onClick={handleSearchAgreement}
-            className="btn-primary w-full h-11 text-sm"
+            className="btn-primary w-full h-11 text-sm font-bold flex items-center justify-center gap-2"
           >
-            Buscar acordo
+            <span>Buscar acordo</span>
+            <i className="bi bi-arrow-right text-xs" />
           </button>
 
-          <div className="text-center pt-2 text-xs text-[var(--text-muted)]">
+          <div className="text-center pt-1 text-xs text-[var(--text-muted)]">
             <span>Não tenho um código</span>
             <span className="mx-2">|</span>
             <button
@@ -245,12 +266,14 @@ export function NegotiateModals() {
         <button
           onClick={() => {
             linkAgreementByCode(displayAgr.id);
+            showToast(`Acordo ${displayAgr.id} (${displayAgr.creditor}) vinculado à sua conta com sucesso!`, "success");
             setNegotiateStep("none");
             setActiveTab("inicio");
           }}
-          className="btn-primary w-full h-11 text-sm"
+          className="btn-primary w-full h-11 text-sm font-bold flex items-center justify-center gap-2"
         >
-          Vincular à minha conta
+          <i className="bi bi-check-circle" />
+          <span>Vincular à minha conta</span>
         </button>
       </div>
     );
@@ -504,17 +527,29 @@ export function NegotiateModals() {
           </div>
 
           {selectedPaymentMethod !== "pix_boleto" && (
-            <div className="pt-1">
-              <label className="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">
-                Matrícula / Unidade Consumidora ({selectedPaymentMethod === "talao_sanepar" ? "Sanepar" : "Copel"})
-              </label>
-              <input
-                type="text"
-                value={concessionaireAccount}
-                onChange={(e) => setConcessionaireAccount(e.target.value)}
-                placeholder="Ex: 8492019-2"
-                className="input-field w-full h-9 px-3 text-xs num-tabular"
-              />
+            <div className="pt-1 space-y-2.5">
+              <div>
+                <label className="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">
+                  Matrícula / Unidade Consumidora ({selectedPaymentMethod === "talao_sanepar" ? "Sanepar" : "Copel"})
+                </label>
+                <input
+                  type="text"
+                  value={concessionaireAccount}
+                  onChange={(e) => setConcessionaireAccount(e.target.value)}
+                  placeholder="Ex: 8492019-2"
+                  className="input-field w-full h-9 px-3 text-xs num-tabular"
+                />
+              </div>
+
+              <div className="p-3 rounded-xl bg-[var(--primary-soft)] border border-[var(--primary-border)] text-xs text-[var(--text-secondary)] space-y-1">
+                <p className="font-bold text-[var(--text-main)] flex items-center gap-1.5">
+                  <i className="bi bi-shield-check text-[var(--accent)]" />
+                  <span>Estratégia Anti-Inadimplência ACREDTA:</span>
+                </p>
+                <p className="text-[11px] leading-relaxed">
+                  Ao optar pelo <strong>Talão {selectedPaymentMethod === "talao_sanepar" ? "Sanepar" : "Copel"}</strong>, a parcela negociada vem discriminada na sua conta de serviços essenciais, garantindo seu desconto e facilitando o controle mensal.
+                </p>
+              </div>
             </div>
           )}
         </div>

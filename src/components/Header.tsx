@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState } from "react";
 import { useApp } from "@/context/AppContext";
@@ -12,6 +12,8 @@ export function Header() {
     setScreenFlow,
     setNegotiateStep,
     setActiveTab,
+    setMobilePreviewOpen,
+    setFlowGuideOpen,
   } = useApp();
 
   const [menuOpen, setMenuOpen] = useState(false);
@@ -20,34 +22,54 @@ export function Header() {
   const firstName = user.name.split(" ")[0];
 
   return (
-    <header className="bg-[var(--bg-surface)] border-b border-[var(--border-color)] px-4 md:px-8 py-4 flex items-center justify-between shrink-0">
+    <header className="bg-[var(--bg-surface)] border-b border-[var(--border-color)] px-4 md:px-8 py-3.5 flex items-center justify-between shrink-0">
       {/* Left: Mobile Logo + Greeting */}
       <div className="flex flex-col">
         {/* Mobile Brand Bar */}
-        <BrandLogo size="sm" className="mb-2 md:hidden" />
+        <BrandLogo size="sm" className="mb-1.5 md:hidden" />
 
-        <h1 className="text-lg md:text-xl font-bold text-[var(--text-main)] tracking-tight">
+        <h1 className="text-base md:text-lg font-bold text-[var(--text-main)] tracking-tight">
           Olá, {firstName}!
         </h1>
-        <p className="text-xs md:text-sm text-[var(--text-secondary)] mt-0.5">
+        <p className="text-xs text-[var(--text-secondary)]">
           Acompanhe seus acordos e mantenha seus pagamentos em dia.
         </p>
       </div>
 
-      {/* Right: Notification Bell & User Profile Menu */}
-      <div className="flex items-center gap-2.5 md:gap-3 relative">
-        {/* Quick Toggle Button (Com Acordo / Sem Acordo) visible on desktop & mobile */}
+      {/* Right: Actions, Notification Bell & User Profile Menu */}
+      <div className="flex items-center gap-2 md:gap-2.5 relative">
+        {/* Button: Guia Autoexplicativo */}
+        <button
+          onClick={() => setFlowGuideOpen(true)}
+          className="hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-[var(--primary-soft)] text-[var(--primary)] border border-[var(--border-color)] hover:bg-[var(--primary)] hover:text-white transition-colors"
+          title="Ver guia autoexplicativo sobre o modelo ACREDTA"
+        >
+          <i className="bi bi-lightbulb text-xs text-[var(--accent)]" />
+          <span>Guia do Fluxo</span>
+        </button>
+
+        {/* Button: Simulador Mobile */}
+        <button
+          onClick={() => setMobilePreviewOpen(true)}
+          className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-[var(--bg-subtle)] text-[var(--text-secondary)] border border-[var(--border-color)] hover:text-[var(--text-main)] transition-colors"
+          title="Ver o app no formato celular (Imagem 4)"
+        >
+          <i className="bi bi-phone text-xs text-[var(--primary)]" />
+          <span>Simulador Celular</span>
+        </button>
+
+        {/* Quick Toggle Button (Com Acordo / Sem Acordo) */}
         <button
           onClick={() => {
             setNegotiateStep("none");
             setHasLinkedAgreements(!hasLinkedAgreements);
             setActiveTab("inicio");
           }}
-          className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-[var(--bg-subtle)] text-[var(--text-secondary)] border border-[var(--border-color)] hover:text-[var(--text-main)] transition-colors"
+          className="hidden xl:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-[var(--bg-subtle)] text-[var(--text-secondary)] border border-[var(--border-color)] hover:text-[var(--text-main)] transition-colors"
           title="Alternar entre estado com acordos ou sem acordo"
         >
           <i className="bi bi-arrow-repeat text-xs text-[var(--primary)]" />
-          <span>{hasLinkedAgreements ? "Ver estado: Sem Acordo" : "Ver estado: Com Acordos"}</span>
+          <span>{hasLinkedAgreements ? "Simular: Sem Acordo" : "Simular: Com Acordo"}</span>
         </button>
 
         {/* Notifications */}
