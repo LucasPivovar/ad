@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState } from "react";
-import { UserProfile, Agreement, AvailableDebt, PaymentReceipt } from "@/types";
+import { UserProfile, Agreement, AvailableDebt, PaymentReceipt, KYCApplicant } from "@/types";
 
 export type ScreenFlow =
   | "portal" // Área logada normal (Início, Acordos, Dívidas, Pagamentos, Perfil, Suporte)
@@ -73,6 +73,11 @@ interface AppContextType {
   setMobilePreviewOpen: (open: boolean) => void;
   flowGuideOpen: boolean;
   setFlowGuideOpen: (open: boolean) => void;
+
+  // Aprovação de Usuários no Admin (KYC)
+  kycApplicants: KYCApplicant[];
+  approveUserKYC: (applicantId: string) => void;
+  rejectUserKYC: (applicantId: string, reason?: string) => void;
 
   // Ações de negócio
   linkAgreementByCode: (code: string) => Agreement | null;
@@ -254,6 +259,51 @@ const INITIAL_RECEIPTS: PaymentReceipt[] = [
   },
 ];
 
+const INITIAL_APPLICANTS: KYCApplicant[] = [
+  {
+    id: "usr_01",
+    name: "Lucas Wallysson Antunes Oliveira",
+    cpf: "123.456.789-09",
+    email: "lucas@exemplo.com",
+    phone: "(41) 98456-7890",
+    birthDate: "15/04/1992",
+    cityUf: "Araucária / PR",
+    addressFull: "Rua das Araucárias, 123, Apto 01 — Centro",
+    registeredAt: "03/11/2026 às 14:32",
+    status: "approved",
+    documentType: "CNH",
+    selfieMatchScore: 98.7,
+  },
+  {
+    id: "usr_02",
+    name: "Mariana Santos Ferreira",
+    cpf: "382.910.456-11",
+    email: "mariana.santos@email.com",
+    phone: "(41) 99123-4567",
+    birthDate: "22/08/1995",
+    cityUf: "Curitiba / PR",
+    addressFull: "Av. Sete de Setembro, 4520, Bloco B — Batel",
+    registeredAt: "Hoje às 16:15",
+    status: "analyzing",
+    documentType: "RG",
+    selfieMatchScore: 97.4,
+  },
+  {
+    id: "usr_03",
+    name: "Carlos Eduardo Mendes",
+    cpf: "541.872.930-44",
+    email: "carlos.mendes@email.com",
+    phone: "(41) 98765-4321",
+    birthDate: "10/01/1988",
+    cityUf: "São José dos Pinhais / PR",
+    addressFull: "Rua Joinville, 890 — Afonso Pena",
+    registeredAt: "Hoje às 17:04",
+    status: "analyzing",
+    documentType: "CIN",
+    selfieMatchScore: 96.9,
+  },
+];
+
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
@@ -313,6 +363,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   >("pix_boleto");
   const [concessionaireAccount, setConcessionaireAccount] = useState<string>("8492019-2");
   const [preloadCode, setPreloadCode] = useState<string>("AC-4587962");
+  const [kycApplicants, setKycApplicants] = useState<KYCApplicant[]>(INITIAL_APPLICANTS);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [toastType, setToastType] = useState<"success" | "info" | "warning">("success");
   const [mobilePreviewOpen, setMobilePreviewOpen] = useState(false);
@@ -324,6 +375,34 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setTimeout(() => {
       setToastMessage(null);
     }, 3500);
+  };
+
+  const approveUserKYC = (applicantId: string) => {
+    setKycApplicants((prev) =>
+      prev.map((app) => (app.id === applicantId ? { ...app, status: "approved" as const } : app))
+    );
+    if (applicantId === user.id) {
+      setUser((u) => ({ ...u, kycStatus: "approved" as const }));
+    }
+    const applicant = kycApplicants.find((a) => a.id === applicantId);
+    showToast(
+      `Cadastro de ${applicant ? applicant.name.split(" ")[0] : "usuário"} aprovado com sucesso! Acesso liberado.`,
+      "success"
+    );
+  };
+
+  const rejectUserKYC = (applicantId: string, reason = "Documento ilegível ou reflexo na foto") => {
+    setKycApplicants((prev) =>
+      prev.map((app) =>
+        app.id === applicantId
+          ? { ...app, status: "rejected" as const, rejectionReason: reason }
+          : app
+      )
+    );
+    if (applicantId === user.id) {
+      setUser((u) => ({ ...u, kycStatus: "not_started" as const }));
+    }
+    showToast("Cadastro reprovado. Notificação enviada para reenvio de documentos.", "warning");
   };
 
   const updateUser = (data: Partial<UserProfile>) => {
@@ -488,6 +567,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         setConcessionaireAccount,
         preloadCode,
         setPreloadCode,
+        kycApplicants,
+        approveUserKYC,
+        rejectUserKYC,
         toastMessage,
         toastType,
         showToast,

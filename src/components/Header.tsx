@@ -12,8 +12,6 @@ export function Header() {
     setScreenFlow,
     setNegotiateStep,
     setActiveTab,
-    setMobilePreviewOpen,
-    setFlowGuideOpen,
   } = useApp();
 
   const [menuOpen, setMenuOpen] = useState(false);
@@ -36,42 +34,8 @@ export function Header() {
         </p>
       </div>
 
-      {/* Right: Actions, Notification Bell & User Profile Menu */}
-      <div className="flex items-center gap-2 md:gap-2.5 relative">
-        {/* Button: Guia Autoexplicativo */}
-        <button
-          onClick={() => setFlowGuideOpen(true)}
-          className="hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-[var(--primary-soft)] text-[var(--primary)] border border-[var(--border-color)] hover:bg-[var(--primary)] hover:text-white transition-colors"
-          title="Ver guia autoexplicativo sobre o modelo ACREDTA"
-        >
-          <i className="bi bi-lightbulb text-xs text-[var(--accent)]" />
-          <span>Guia do Fluxo</span>
-        </button>
-
-        {/* Button: Simulador Mobile */}
-        <button
-          onClick={() => setMobilePreviewOpen(true)}
-          className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-[var(--bg-subtle)] text-[var(--text-secondary)] border border-[var(--border-color)] hover:text-[var(--text-main)] transition-colors"
-          title="Ver o app no formato celular (Imagem 4)"
-        >
-          <i className="bi bi-phone text-xs text-[var(--primary)]" />
-          <span>Simulador Celular</span>
-        </button>
-
-        {/* Quick Toggle Button (Com Acordo / Sem Acordo) */}
-        <button
-          onClick={() => {
-            setNegotiateStep("none");
-            setHasLinkedAgreements(!hasLinkedAgreements);
-            setActiveTab("inicio");
-          }}
-          className="hidden xl:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-[var(--bg-subtle)] text-[var(--text-secondary)] border border-[var(--border-color)] hover:text-[var(--text-main)] transition-colors"
-          title="Alternar entre estado com acordos ou sem acordo"
-        >
-          <i className="bi bi-arrow-repeat text-xs text-[var(--primary)]" />
-          <span>{hasLinkedAgreements ? "Simular: Sem Acordo" : "Simular: Com Acordo"}</span>
-        </button>
-
+      {/* Right: Notification Bell & User Profile Menu */}
+      <div className="flex items-center gap-2.5 md:gap-3 relative">
         {/* Notifications */}
         <div className="relative">
           <button

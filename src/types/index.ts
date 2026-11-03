@@ -71,3 +71,19 @@ export interface PaymentReceipt {
   method: 'PIX' | 'BOLETO' | 'TALÃO SANEPAR' | 'TALÃO COPEL';
   authCode: string;
 }
+
+export interface KYCApplicant {
+  id: string;
+  name: string;
+  cpf: string;
+  email: string;
+  phone: string;
+  birthDate: string;
+  cityUf: string;
+  addressFull: string;
+  registeredAt: string;
+  status: 'analyzing' | 'approved' | 'rejected';
+  documentType: 'CNH' | 'RG' | 'CIN';
+  rejectionReason?: string;
+  selfieMatchScore: number;
+}
