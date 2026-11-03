@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState } from "react";
 import { useApp } from "@/context/AppContext";
@@ -24,7 +24,7 @@ export function ProfileView() {
   };
 
   return (
-    <div className="space-y-5 max-w-2xl">
+    <div className="space-y-5 w-full">
       <div>
         <h2 className="text-xl font-bold text-[var(--text-main)]">Meu Perfil</h2>
         <p className="text-xs sm:text-sm text-[var(--text-secondary)] mt-0.5">

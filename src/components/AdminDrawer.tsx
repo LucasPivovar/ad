@@ -65,8 +65,8 @@ export function AdminDrawer() {
   const pendingCount = kycApplicants.filter((a) => a.status === "analyzing").length;
 
   return (
-    <div className="min-h-screen bg-[var(--bg-app)] p-4 sm:p-8">
-      <div className="max-w-5xl mx-auto space-y-5">
+    <div className="min-h-screen bg-[var(--bg-app)] p-4 sm:p-6 lg:p-8">
+      <div className="w-full space-y-5">
         {/* Top Bar */}
         <div className="card-surface p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
