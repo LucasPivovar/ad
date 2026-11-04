@@ -571,14 +571,6 @@ body {
 .auth-card { box-shadow: 0 12px 36px rgba(2, 28, 57, 0.045); }
 .auth-visual { position: relative; isolation: isolate; }
 .auth-collage-image { object-fit: contain; }
-.auth-message { position: absolute; z-index: 2; left: 11.5%; top: 6%; display: flex; flex-direction: column; width: 35%; min-height: 42%; padding: 4% 4.5%; border-radius: 22px 22px 0 22px; background: #082a78; color: white; box-shadow: 0 12px 30px rgba(2, 28, 57, .12); }
-.auth-message > span { font-size: clamp(11px, 1.25vw, 17px); line-height: 1.12; font-weight: 500; }
-.auth-message strong { display: flex; align-items: center; gap: 8px; margin-top: 7px; font-size: clamp(34px, 4.7vw, 62px); line-height: .9; letter-spacing: -.055em; }
-.auth-message strong span { font-size: inherit; }
-.auth-message i { color: white; font-size: .65em; }
-.auth-message em { color: var(--accent); font-size: clamp(31px, 4.4vw, 58px); line-height: .88; font-style: normal; font-weight: 800; letter-spacing: -.055em; }
 @media (max-width: 767px) {
   .auth-visual { max-width: 440px; }
-  .auth-message { border-radius: 15px 15px 0 15px; }
-  .auth-message strong { gap: 5px; margin-top: 5px; }
 }
