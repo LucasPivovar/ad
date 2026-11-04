@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { useApp } from "@/context/AppContext";
+import { BrandLogo } from "@/components/BrandLogo";
 
 export function OnboardingModal() {
   const { screenFlow, setScreenFlow, user, updateUser, setHasLinkedAgreements } = useApp();
@@ -43,474 +45,105 @@ export function OnboardingModal() {
     }, 350);
   };
 
+  const renderAccessPage = (isRegister: boolean) => (
+    <main className="auth-page min-h-screen w-full bg-white px-4 py-5 sm:px-8 lg:px-12">
+      <div className="mx-auto flex min-h-[calc(100vh-2.5rem)] w-full max-w-6xl flex-col">
+        <header className="flex items-center justify-between">
+          <BrandLogo size="md" />
+          <span className="inline-flex items-center gap-2 rounded-full bg-[var(--accent-soft)] px-3 py-1.5 text-[11px] font-semibold text-[var(--primary)]">
+            <i className="bi bi-shield-lock-fill text-[var(--success)]" /> Acesso seguro
+          </span>
+        </header>
+
+        <div className="grid flex-1 items-center gap-8 py-7 md:grid-cols-2 md:gap-12 lg:gap-20 lg:py-10">
+          <section className="auth-card page-enter order-2 mx-auto w-full max-w-[490px] rounded-2xl border border-[var(--border-color)] bg-white p-6 sm:p-8 lg:order-1 lg:p-9">
+            <div className="mb-7 inline-flex items-center gap-2 rounded-full bg-[var(--accent-soft)] px-3 py-2 text-[11px] font-bold uppercase tracking-wide text-[var(--primary)]">
+              <i className="bi bi-people-fill text-[var(--success)]" /> De pessoas para pessoas
+            </div>
+            <h1 className="max-w-md text-3xl font-extrabold leading-tight tracking-tight text-[var(--text-main)] sm:text-[2.55rem]">
+              {isRegister ? <>Comece por aqui e <span className="text-[var(--success)]">consulte seu CPF</span></> : <>Acesse sua conta e <span className="text-[var(--success)]">acompanhe seus acordos</span></>}
+            </h1>
+            <p className="mt-4 text-sm leading-relaxed text-[var(--text-secondary)]">
+              {isRegister ? "Veja suas opções de negociação gratuitamente, com segurança e sem compromisso." : "Consulte seus acordos e acompanhe tudo em um só lugar, com praticidade e segurança."}
+            </p>
+
+            <div className="my-6 flex items-start gap-3 border-b border-[var(--border-color)] pb-5 text-sm leading-relaxed text-[var(--text-secondary)]">
+              <i className="bi bi-shield-lock mt-0.5 text-lg text-[var(--primary)]" />
+              <span>{isRegister ? "Informe seu CPF para verificar as ofertas disponíveis para você." : "Entre com seus dados para acessar sua área de negociação."}</span>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label htmlFor={isRegister ? "register-cpf" : "login-id"} className="mb-1.5 block text-xs font-semibold text-[var(--text-main)]">
+                  {isRegister ? "CPF" : "CPF ou e-mail"}
+                </label>
+                <input
+                  id={isRegister ? "register-cpf" : "login-id"}
+                  type="text"
+                  value={isRegister ? form.cpf : loginCpf}
+                  onChange={(event) => isRegister ? setForm({ ...form, cpf: event.target.value }) : setLoginCpf(event.target.value)}
+                  placeholder={isRegister ? "000.000.000-00" : "Digite seu CPF ou e-mail"}
+                  autoComplete={isRegister ? "off" : "username"}
+                  className="input-field h-12 w-full px-4 text-sm num-tabular"
+                />
+              </div>
+              {!isRegister && (
+                <div>
+                  <label htmlFor="login-password" className="mb-1.5 block text-xs font-semibold text-[var(--text-main)]">Senha</label>
+                  <div className="relative">
+                    <input id="login-password" type={showPass ? "text" : "password"} value={loginPass} onChange={(event) => setLoginPass(event.target.value)} placeholder="Digite sua senha" autoComplete="current-password" className="input-field h-12 w-full px-4 pr-12 text-sm" />
+                    <button type="button" onClick={() => setShowPass(!showPass)} className="absolute inset-y-0 right-3 text-[var(--text-muted)]" aria-label={showPass ? "Ocultar senha" : "Mostrar senha"}>
+                      <i className={`bi ${showPass ? "bi-eye-slash" : "bi-eye"} text-lg`} />
+                    </button>
+                  </div>
+                </div>
+              )}
+              <button
+                onClick={() => isRegister ? (setStep(1), setScreenFlow("register_steps")) : setScreenFlow("portal")}
+                className="btn-primary flex h-12 w-full items-center justify-center gap-2 text-sm shadow-sm"
+              >
+                <span>{isRegister ? "Consultar CPF grátis" : "Entrar na minha conta"}</span><i className="bi bi-arrow-right" />
+              </button>
+            </div>
+
+            <div className="mt-5 flex flex-wrap items-center justify-between gap-3 text-xs">
+              {isRegister ? (
+                <button onClick={() => setScreenFlow("login")} className="font-semibold text-[var(--primary)] hover:underline">Já tenho uma conta · Fazer login</button>
+              ) : <>
+                <button type="button" onClick={() => setScreenFlow("portal")} className="font-semibold text-[var(--primary)] hover:underline">Esqueceu sua senha?</button>
+                <button type="button" onClick={() => setScreenFlow("register_start")} className="font-bold text-[var(--success)] hover:underline">Criar meu acesso</button>
+              </>}
+            </div>
+          </section>
+
+          <section className="auth-visual page-enter order-1 mx-auto h-[230px] w-full max-w-[540px] md:order-2 md:h-[410px] lg:h-[470px]" aria-label="Clientes ACREDTA celebrando suas conquistas">
+            <div className="auth-blue-block" />
+            <div className="auth-photo auth-photo-back"><Image src="/images/hero-man.jpg" alt="Cliente sorrindo após resolver suas pendências" fill sizes="(max-width: 767px) 55vw, 32vw" /></div>
+            <div className="auth-photo auth-photo-front"><Image src="/images/hero-woman.jpg" alt="Cliente usando o celular com confiança" fill sizes="(max-width: 767px) 42vw, 25vw" /></div>
+            <div className="auth-message">
+              <span>Tudo para você dizer</span>
+              <strong>tá pago <i className="bi bi-heart-fill" /></strong>
+            </div>
+            <div className="auth-stamp"><i className="bi bi-check-circle-fill" /> Seguro e simples</div>
+          </section>
+        </div>
+        <footer className="pb-2 text-center text-[11px] text-[var(--text-muted)]">ACREDTA · Negocie com tranquilidade</footer>
+      </div>
+    </main>
+  );
+
   /* ----------------------------------------------------------------
      1. TELA DE LOGIN (Referência Acordo Certo + PWA Mobile First)
      ---------------------------------------------------------------- */
   if (screenFlow === "login") {
-    return (
-      <div className="min-h-screen bg-[var(--bg-app)] flex flex-col items-center justify-center p-3 sm:p-6 md:p-8">
-        {/* Mobile Top Bar (PWA Header) */}
-        <div className="w-full max-w-5xl flex items-center justify-between mb-3 md:hidden px-1">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-[var(--primary)] text-[var(--accent)] flex items-center justify-center shadow-sm">
-              <i className="bi bi-check-lg text-sm" />
-            </div>
-            <span className="text-base font-black tracking-tight text-[var(--primary)]">
-              ACRED<span className="text-[var(--accent)]">TA</span>
-            </span>
-          </div>
-          <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-[var(--text-secondary)] bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-full border border-[var(--border-color)] shadow-xs">
-            <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" />
-            App Oficial • PWA
-          </span>
-        </div>
-
-        {/* Main 2-Column Container */}
-        <div className="card-surface page-enter w-full max-w-5xl p-4 sm:p-8 md:p-10 shadow-2xl">
-          {/* Mobile-Only Hero Banner (< 768px) */}
-          <div className="md:hidden mb-5 relative rounded-2xl overflow-hidden bg-gradient-to-r from-[#021C39] via-[#042852] to-[#021C39] p-4 text-white shadow-lg border border-[#0a3564]">
-            <div className="flex items-center justify-between gap-3 relative z-10">
-              <div className="space-y-1 flex-1">
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/10 text-[10px] font-bold text-[#01C583] tracking-wider uppercase">
-                  <i className="bi bi-people-fill text-[9px]" /> De pessoas para pessoas
-                </span>
-                <p className="text-[11px] text-white/80 font-medium">Tudo para você dizer:</p>
-                <div className="flex items-center gap-1.5">
-                  <span className="text-xl font-black text-white tracking-tight">tá pago</span>
-                  <span className="w-5 h-5 rounded-full bg-[#01C583] text-[#021C39] flex items-center justify-center font-black text-xs shadow-xs">
-                    <i className="bi bi-check-lg" />
-                  </span>
-                </div>
-              </div>
-              <div className="relative w-20 h-20 rounded-xl overflow-hidden border border-white/20 shadow-md shrink-0">
-                <img
-                  src="/images/hero-smile.jpg"
-                  alt="Cliente com celular"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-10 items-center">
-            {/* Left Column: Form & Access */}
-            <div className="md:col-span-6 space-y-5">
-              {/* Desktop Logo */}
-              <div className="hidden md:flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-[var(--primary)] text-[var(--accent)] flex items-center justify-center shadow-sm">
-                  <i className="bi bi-check-lg text-base" />
-                </div>
-                <span className="text-xl font-black tracking-tight text-[var(--primary)]">
-                  ACRED<span className="text-[var(--accent)]">TA</span>
-                </span>
-              </div>
-
-              {/* Badge De pessoas para pessoas */}
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#E6EAF7] border border-[#d0d8ef] text-[#021C39] text-xs font-bold tracking-wide uppercase">
-                <i className="bi bi-people-fill text-[#01C583]" />
-                <span>De pessoas para pessoas</span>
-              </div>
-
-              <div>
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-[var(--text-main)] leading-tight tracking-tight">
-                  Acesse sua conta e acompanhe seus acordos
-                </h1>
-                <p className="text-xs sm:text-sm text-[var(--text-secondary)] mt-1.5 leading-relaxed">
-                  Consulte seu CPF e acesse sua área com transparência, rapidez e total segurança.
-                </p>
-              </div>
-
-              {/* Login Form Box */}
-              <div className="p-5 sm:p-6 rounded-2xl bg-[var(--bg-subtle)] border border-[var(--border-color)] space-y-4 shadow-xs">
-                <div className="space-y-3">
-                  <div>
-                    <label className="block text-xs font-bold text-[var(--text-main)] mb-1">
-                      CPF ou E-mail
-                    </label>
-                    <div className="relative">
-                      <i className="bi bi-person text-sm text-[var(--text-muted)] absolute left-3.5 top-3.5" />
-                      <input
-                        type="text"
-                        value={loginCpf}
-                        onChange={(e) => setLoginCpf(e.target.value)}
-                        placeholder="Digite seu CPF ou E-mail"
-                        className="input-field w-full h-12 pl-10 pr-3.5 text-sm num-tabular"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-[var(--text-main)] mb-1">
-                      Senha
-                    </label>
-                    <div className="relative">
-                      <i className="bi bi-lock text-sm text-[var(--text-muted)] absolute left-3.5 top-3.5" />
-                      <input
-                        type={showPass ? "text" : "password"}
-                        value={loginPass}
-                        onChange={(e) => setLoginPass(e.target.value)}
-                        placeholder="Digite sua senha"
-                        className="input-field w-full h-12 pl-10 pr-10 text-sm"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPass(!showPass)}
-                        className="absolute right-3.5 top-3.5 text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors"
-                        aria-label="Mostrar ou ocultar senha"
-                      >
-                        <i className={`bi ${showPass ? "bi-eye-slash" : "bi-eye"} text-base`} />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => setScreenFlow("portal")}
-                  className="btn-primary w-full h-12 text-sm font-bold flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all"
-                >
-                  <span>Entrar na minha conta</span>
-                  <i className="bi bi-arrow-right" />
-                </button>
-
-                <div className="flex items-center justify-between text-xs pt-1">
-                  <button
-                    type="button"
-                    onClick={() => setScreenFlow("portal")}
-                    className="text-[var(--primary)] font-semibold hover:underline"
-                  >
-                    Esqueceu sua senha?
-                  </button>
-                  <span className="text-[var(--text-light)]">•</span>
-                  <button
-                    type="button"
-                    onClick={() => setScreenFlow("register_start")}
-                    className="text-[var(--accent-hover)] font-bold hover:underline"
-                  >
-                    Criar meu acesso
-                  </button>
-                </div>
-              </div>
-
-              {/* Security Pill */}
-              <div className="flex items-center gap-2.5 text-xs text-[var(--text-secondary)] pt-1">
-                <i className="bi bi-shield-check text-base text-[var(--accent)] shrink-0" />
-                <span>Ambiente protegido com criptografia de ponta a ponta e sigilo bancário.</span>
-              </div>
-            </div>
-
-            {/* Right Column: Acordo Certo Lifestyle Hero (Desktop >= 768px) */}
-            <div className="hidden md:flex md:col-span-6 flex-col justify-between rounded-3xl overflow-hidden bg-gradient-to-br from-[#021C39] via-[#042852] to-[#021C39] p-7 min-h-[500px] border border-[#0a3564] shadow-2xl relative">
-              {/* Decorative Glow */}
-              <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-[#01C583]/10 blur-3xl pointer-events-none" />
-              <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-[#0284c7]/20 blur-3xl pointer-events-none" />
-
-              {/* Floating Navy Badge: "Tudo para você dizer: tá pago" (Acordo Certo Reference) */}
-              <div className="relative z-20 self-start bg-[#021C39]/95 backdrop-blur-md border border-white/20 text-white rounded-2xl p-4 sm:p-5 shadow-2xl max-w-[210px] transform hover:scale-[1.02] transition-transform">
-                <p className="text-xs text-white/80 font-medium leading-tight">
-                  Tudo para você dizer:
-                </p>
-                <div className="flex items-center gap-2 mt-1.5">
-                  <span className="text-2xl sm:text-3xl font-black text-white tracking-tight">tá pago</span>
-                  <span className="w-7 h-7 rounded-full bg-[#01C583] text-[#021C39] flex items-center justify-center font-black text-sm shadow-sm">
-                    <i className="bi bi-check-lg" />
-                  </span>
-                </div>
-              </div>
-
-              {/* Photos Composition of diverse smiling Brazilians with smartphone */}
-              <div className="relative z-10 my-4 flex items-end justify-center gap-3 sm:gap-4 flex-1">
-                {/* Young man smiling with smartphone */}
-                <div className="relative w-36 h-52 rounded-2xl overflow-hidden border-2 border-white/10 shadow-lg transform -rotate-2 hover:rotate-0 transition-transform">
-                  <img
-                    src="/images/hero-phone.jpg"
-                    alt="Cliente Acredta com smartphone"
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#021C39]/80 via-transparent to-transparent" />
-                  <div className="absolute bottom-2 left-2 right-2 flex items-center gap-1.5 text-[10px] text-white font-medium">
-                    <i className="bi bi-shield-fill-check text-[#01C583]" />
-                    <span>100% seguro</span>
-                  </div>
-                </div>
-
-                {/* Young woman smiling with phone (foreground) */}
-                <div className="relative w-44 h-64 rounded-2xl overflow-hidden border-2 border-white/20 shadow-2xl transform rotate-2 hover:rotate-0 transition-transform z-10">
-                  <img
-                    src="/images/hero-smile.jpg"
-                    alt="Cliente sorrindo no celular"
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#021C39]/70 via-transparent to-transparent" />
-                  <div className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center gap-1.5 text-[11px] text-white font-bold">
-                    <span className="w-2 h-2 rounded-full bg-[#01C583] animate-ping" />
-                    <span>Acordo em dia</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Bottom stats & community pill */}
-              <div className="relative z-20 flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-white/10 text-white/90">
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-[#01C583]">
-                    <i className="bi bi-people-fill text-xs" />
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-white/70 block leading-none">Comunidade</span>
-                    <strong className="text-xs font-bold text-white">+50 mil acordos</strong>
-                  </div>
-                </div>
-
-                <div className="inline-flex items-center gap-1.5 bg-white/10 backdrop-blur-sm px-2.5 py-1 rounded-full text-[10px] font-semibold text-white/90">
-                  <i className="bi bi-patch-check-fill text-[#01C583]" />
-                  <span>Portal Oficial ACREDTA</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Social Proof Media Bar (Acordo Certo Reference) */}
-          <div className="mt-8 pt-6 border-t border-[var(--border-color)] text-center">
-            <p className="text-[11px] font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-3">
-              Onde já fomos notícia e destaque nacional
-            </p>
-            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-[var(--text-light)] font-black text-xs tracking-wider opacity-80">
-              <span>GLOBO</span>
-              <span>•</span>
-              <span>SBT</span>
-              <span>•</span>
-              <span>RECORD</span>
-              <span>•</span>
-              <span>BAND</span>
-              <span>•</span>
-              <span>VEJA</span>
-              <span>•</span>
-              <span>EXAME</span>
-              <span>•</span>
-              <span>CNN BRASIL</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    return renderAccessPage(false);
   }
 
   /* ----------------------------------------------------------------
      2. INÍCIO DO CADASTRO - CAPTURA DE CPF (Referência Acordo Certo + PWA)
      ---------------------------------------------------------------- */
   if (screenFlow === "register_start") {
-    return (
-      <div className="min-h-screen bg-[var(--bg-app)] flex flex-col items-center justify-center p-3 sm:p-6 md:p-8">
-        {/* Mobile Top Bar (PWA Header) */}
-        <div className="w-full max-w-5xl flex items-center justify-between mb-3 md:hidden px-1">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-[var(--primary)] text-[var(--accent)] flex items-center justify-center shadow-sm">
-              <i className="bi bi-check-lg text-sm" />
-            </div>
-            <span className="text-base font-black tracking-tight text-[var(--primary)]">
-              ACRED<span className="text-[var(--accent)]">TA</span>
-            </span>
-          </div>
-          <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-[var(--text-secondary)] bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-full border border-[var(--border-color)] shadow-xs">
-            <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" />
-            Cadastro Oficial • PWA
-          </span>
-        </div>
-
-        {/* Main 2-Column Container */}
-        <div className="card-surface page-enter w-full max-w-5xl p-4 sm:p-8 md:p-10 shadow-2xl">
-          {/* Mobile-Only Hero Banner (< 768px) */}
-          <div className="md:hidden mb-5 relative rounded-2xl overflow-hidden bg-gradient-to-r from-[#021C39] via-[#042852] to-[#021C39] p-4 text-white shadow-lg border border-[#0a3564]">
-            <div className="flex items-center justify-between gap-3 relative z-10">
-              <div className="space-y-1 flex-1">
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/10 text-[10px] font-bold text-[#01C583] tracking-wider uppercase">
-                  <i className="bi bi-people-fill text-[9px]" /> De pessoas para pessoas
-                </span>
-                <p className="text-[11px] text-white/80 font-medium">Tudo para você dizer:</p>
-                <div className="flex items-center gap-1.5">
-                  <span className="text-xl font-black text-white tracking-tight">tá pago</span>
-                  <span className="w-5 h-5 rounded-full bg-[#01C583] text-[#021C39] flex items-center justify-center font-black text-xs shadow-xs">
-                    <i className="bi bi-check-lg" />
-                  </span>
-                </div>
-              </div>
-              <div className="relative w-20 h-20 rounded-xl overflow-hidden border border-white/20 shadow-md shrink-0">
-                <img
-                  src="/images/hero-phone.jpg"
-                  alt="Cliente com celular"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-10 items-center">
-            {/* Left Column: Register Card */}
-            <div className="md:col-span-6 space-y-5">
-              {/* Desktop Logo */}
-              <div className="hidden md:flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-[var(--primary)] text-[var(--accent)] flex items-center justify-center shadow-sm">
-                  <i className="bi bi-check-lg text-base" />
-                </div>
-                <span className="text-xl font-black tracking-tight text-[var(--primary)]">
-                  ACRED<span className="text-[var(--accent)]">TA</span>
-                </span>
-              </div>
-
-              {/* Badge De pessoas para pessoas */}
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#E6EAF7] border border-[#d0d8ef] text-[#021C39] text-xs font-bold tracking-wide uppercase">
-                <i className="bi bi-people-fill text-[#01C583]" />
-                <span>De pessoas para pessoas</span>
-              </div>
-
-              <div>
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-[var(--text-main)] leading-tight tracking-tight">
-                  Consulte seu CPF e crie sua conta
-                </h1>
-                <p className="text-xs sm:text-sm text-[var(--text-secondary)] mt-1.5 leading-relaxed">
-                  Verifique suas propostas de acordo, parcele no talão de concessionária ou Pix, e acompanhe tudo pelo celular.
-                </p>
-              </div>
-
-              {/* Register Start Box */}
-              <div className="p-5 sm:p-6 rounded-2xl bg-[var(--bg-subtle)] border border-[var(--border-color)] space-y-4 shadow-xs">
-                <div>
-                  <label className="block text-xs font-bold text-[var(--text-main)] mb-1">
-                    Digite seu CPF
-                  </label>
-                  <div className="relative">
-                    <i className="bi bi-person-vcard text-sm text-[var(--text-muted)] absolute left-3.5 top-3.5" />
-                    <input
-                      type="text"
-                      value={form.cpf}
-                      onChange={(e) => setForm({ ...form, cpf: e.target.value })}
-                      placeholder="000.000.000-00"
-                      className="input-field w-full h-12 pl-10 pr-3.5 text-sm num-tabular"
-                    />
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => {
-                    setStep(1);
-                    setScreenFlow("register_steps");
-                  }}
-                  className="btn-primary w-full h-12 text-sm font-bold flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all"
-                >
-                  <span>Iniciar cadastro grátis</span>
-                  <i className="bi bi-arrow-right" />
-                </button>
-
-                <div className="text-center pt-1">
-                  <button
-                    onClick={() => setScreenFlow("login")}
-                    className="text-xs text-[var(--primary)] font-bold hover:underline"
-                  >
-                    Já tenho uma conta • Fazer login
-                  </button>
-                </div>
-              </div>
-
-              {/* Guarantee */}
-              <div className="flex items-center gap-2.5 text-xs text-[var(--text-secondary)] pt-1">
-                <i className="bi bi-shield-check text-base text-[var(--accent)] shrink-0" />
-                <span>Consulta 100% gratuita, sem compromisso e protegida por sigilo bancário.</span>
-              </div>
-            </div>
-
-            {/* Right Column: Acordo Certo Lifestyle Hero */}
-            <div className="hidden md:flex md:col-span-6 flex-col justify-between rounded-3xl overflow-hidden bg-gradient-to-br from-[#021C39] via-[#042852] to-[#021C39] p-7 min-h-[500px] border border-[#0a3564] shadow-2xl relative">
-              {/* Decorative Glow */}
-              <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-[#01C583]/10 blur-3xl pointer-events-none" />
-              <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-[#0284c7]/20 blur-3xl pointer-events-none" />
-
-              {/* Floating Navy Badge: "Tudo para você dizer: tá pago" (Acordo Certo Reference) */}
-              <div className="relative z-20 self-start bg-[#021C39]/95 backdrop-blur-md border border-white/20 text-white rounded-2xl p-4 sm:p-5 shadow-2xl max-w-[210px] transform hover:scale-[1.02] transition-transform">
-                <p className="text-xs text-white/80 font-medium leading-tight">
-                  Tudo para você dizer:
-                </p>
-                <div className="flex items-center gap-2 mt-1.5">
-                  <span className="text-2xl sm:text-3xl font-black text-white tracking-tight">tá pago</span>
-                  <span className="w-7 h-7 rounded-full bg-[#01C583] text-[#021C39] flex items-center justify-center font-black text-sm shadow-sm">
-                    <i className="bi bi-check-lg" />
-                  </span>
-                </div>
-              </div>
-
-              {/* Photos Composition of diverse smiling Brazilians with smartphone */}
-              <div className="relative z-10 my-4 flex items-end justify-center gap-3 sm:gap-4 flex-1">
-                {/* Young man smiling with smartphone */}
-                <div className="relative w-36 h-52 rounded-2xl overflow-hidden border-2 border-white/10 shadow-lg transform -rotate-2 hover:rotate-0 transition-transform">
-                  <img
-                    src="/images/hero-phone.jpg"
-                    alt="Cliente Acredta com celular"
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#021C39]/80 via-transparent to-transparent" />
-                  <div className="absolute bottom-2 left-2 right-2 flex items-center gap-1.5 text-[10px] text-white font-medium">
-                    <i className="bi bi-shield-fill-check text-[#01C583]" />
-                    <span>100% seguro</span>
-                  </div>
-                </div>
-
-                {/* Young woman smiling with phone (foreground) */}
-                <div className="relative w-44 h-64 rounded-2xl overflow-hidden border-2 border-white/20 shadow-2xl transform rotate-2 hover:rotate-0 transition-transform z-10">
-                  <img
-                    src="/images/hero-smile.jpg"
-                    alt="Cliente sorrindo no celular"
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#021C39]/70 via-transparent to-transparent" />
-                  <div className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center gap-1.5 text-[11px] text-white font-bold">
-                    <span className="w-2 h-2 rounded-full bg-[#01C583] animate-ping" />
-                    <span>Acordo em dia</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Bottom stats & community pill */}
-              <div className="relative z-20 flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-white/10 text-white/90">
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-[#01C583]">
-                    <i className="bi bi-people-fill text-xs" />
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-white/70 block leading-none">Comunidade</span>
-                    <strong className="text-xs font-bold text-white">+50 mil acordos</strong>
-                  </div>
-                </div>
-
-                <div className="inline-flex items-center gap-1.5 bg-white/10 backdrop-blur-sm px-2.5 py-1 rounded-full text-[10px] font-semibold text-white/90">
-                  <i className="bi bi-patch-check-fill text-[#01C583]" />
-                  <span>Portal Oficial ACREDTA</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Social Proof Media Bar */}
-          <div className="mt-8 pt-6 border-t border-[var(--border-color)] text-center">
-            <p className="text-[11px] font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-3">
-              Onde já fomos notícia e destaque nacional
-            </p>
-            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-[var(--text-light)] font-black text-xs tracking-wider opacity-80">
-              <span>GLOBO</span>
-              <span>•</span>
-              <span>SBT</span>
-              <span>•</span>
-              <span>RECORD</span>
-              <span>•</span>
-              <span>BAND</span>
-              <span>•</span>
-              <span>VEJA</span>
-              <span>•</span>
-              <span>EXAME</span>
-              <span>•</span>
-              <span>CNN BRASIL</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    return renderAccessPage(true);
   }
 
   /* ----------------------------------------------------------------
