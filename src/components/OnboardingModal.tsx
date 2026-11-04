@@ -116,15 +116,13 @@ export function OnboardingModal() {
             </div>
           </section>
 
-          <section className="auth-visual page-enter order-1 mx-auto h-[230px] w-full max-w-[540px] md:order-2 md:h-[410px] lg:h-[470px]" aria-label="Clientes ACREDTA celebrando suas conquistas">
-            <div className="auth-blue-block" />
-            <div className="auth-photo auth-photo-back"><Image src="/images/hero-man.jpg" alt="Cliente sorrindo após resolver suas pendências" fill sizes="(max-width: 767px) 55vw, 32vw" /></div>
-            <div className="auth-photo auth-photo-front"><Image src="/images/hero-woman.jpg" alt="Cliente usando o celular com confiança" fill sizes="(max-width: 767px) 42vw, 25vw" /></div>
-            <div className="auth-message">
-              <span>Tudo para você dizer</span>
-              <strong>tá pago <i className="bi bi-heart-fill" /></strong>
+          <section className="auth-visual page-enter order-1 mx-auto aspect-[4/3] w-full max-w-[560px] md:order-2" aria-label="Clientes ACREDTA celebrando suas conquistas">
+            <Image src="/images/auth-collage.png" alt="Uma mulher comemora com o celular enquanto um cliente sorri ao telefone" fill priority sizes="(max-width: 767px) 100vw, 48vw" className="auth-collage-image" />
+            <div className="auth-message" aria-label="Tudo para você dizer: tá pago">
+              <span>Tudo para<br />você dizer</span>
+              <strong><span>tá</span> <i className="bi bi-heart-fill" /></strong>
+              <em>pago</em>
             </div>
-            <div className="auth-stamp"><i className="bi bi-check-circle-fill" /> Seguro e simples</div>
           </section>
         </div>
         <footer className="pb-2 text-center text-[11px] text-[var(--text-muted)]">ACREDTA · Negocie com tranquilidade</footer>
