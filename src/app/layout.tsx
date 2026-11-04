@@ -13,6 +13,12 @@ export const metadata: Metadata = {
   title: "ACREDTA | Portal de Negociação e Pagamento",
   description:
     "ACREDTA Financeira — Acompanhe seus acordos, realize pagamentos via Pix, Boleto ou Talão de Concessionária.",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "ACREDTA",
+  },
 };
 
 export const viewport: Viewport = {
@@ -20,6 +26,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
+  themeColor: "#021C39",
 };
 
 export default function RootLayout({
