@@ -40,10 +40,6 @@ export function DashboardView({ onOpenPaymentModal }: DashboardViewProps) {
       {/* Top Banner (Exact match to Image 4) */}
       <div className="rounded-[var(--radius-card)] bg-[var(--primary)] text-white p-5 sm:p-6 relative overflow-hidden flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">
         <div className="space-y-1.5 max-w-lg relative z-10">
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/10 text-[var(--accent)] text-[11px] font-bold border border-white/15">
-            <i className="bi bi-shield-check" />
-            Portal Oficial de Acordos
-          </span>
           <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight">
             Seus acordos em um só lugar.
           </h2>
