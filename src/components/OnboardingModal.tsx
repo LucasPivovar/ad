@@ -117,7 +117,7 @@ export function OnboardingModal() {
           </section>
 
           <section className="auth-visual page-enter order-1 mx-auto aspect-[4/3] w-full max-w-[560px] md:order-2" aria-label="Clientes ACREDTA celebrando suas conquistas">
-            <Image src="/images/auth-collage.png" alt="Uma mulher comemora com o celular enquanto um cliente sorri ao telefone" fill priority sizes="(max-width: 767px) 100vw, 48vw" className="auth-collage-image" />
+            <Image src="/images/auth-single-photo.png" alt="Uma mulher comemora com o celular enquanto um cliente sorri ao telefone" fill priority sizes="(max-width: 767px) 100vw, 48vw" className="auth-collage-image" />
             <div className="auth-message" aria-label="Tudo para você dizer: tá pago">
               <span>Tudo para<br />você dizer</span>
               <strong><span>tá</span> <i className="bi bi-heart-fill" /></strong>
