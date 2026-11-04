@@ -5,22 +5,51 @@ import { useApp } from "@/context/AppContext";
 
 export function ProfileView() {
   const { user, updateUser } = useApp();
-  const [editingSection, setEditingSection] = useState<string | null>(null);
-  const [phone, setPhone] = useState(user.phone);
-  const [email, setEmail] = useState(user.email);
-  const [street, setStreet] = useState(user.address.street);
+  const [editingSection, setEditingSection] = useState<"endereco" | "contato" | "todos" | null>(null);
+  const [address, setAddress] = useState(user.address);
   const [savedNotice, setSavedNotice] = useState(false);
+  const [formError, setFormError] = useState("");
+  const editAddress = editingSection === "endereco" || editingSection === "todos";
+  const editContact = editingSection === "contato" || editingSection === "todos";
+  const addressFields = [
+    { key: "cep", label: "CEP" },
+    { key: "street", label: "Rua" },
+    { key: "number", label: "Número" },
+    { key: "complement", label: "Complemento (opcional)" },
+    { key: "neighborhood", label: "Bairro" },
+    { key: "city", label: "Cidade" },
+    { key: "uf", label: "UF" },
+  ] as const;
+  const addressChanged = editAddress && addressFields.some(
+    ({ key }) => (address[key] ?? "").trim() !== (user.address[key] ?? "").trim(),
+  );
 
-  const handleSave = (e: React.FormEvent) => {
-    e.preventDefault();
+  const openEditor = (section: typeof editingSection) => {
+    setAddress(user.address);
+    setSavedNotice(false);
+    setFormError("");
+    setEditingSection(section);
+  };
+
+  const handleSave = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    if (addressChanged) {
+      const documents = [data.get("residenceProof"), data.get("utilityBill")];
+      if (documents.some((file) => !(file instanceof File) || file.size === 0 || !/\.(pdf|jpe?g|png)$/i.test(file.name))) {
+        setFormError("Anexe o comprovante e a conta atualizada em PDF, JPG ou PNG.");
+        return;
+      }
+    }
     updateUser({
-      phone,
-      email,
-      address: { ...user.address, street },
+      ...(editContact && {
+        phone: String(data.get("phone") ?? "").trim(),
+        email: String(data.get("email") ?? "").trim(),
+      }),
+      ...(addressChanged && { address }),
     });
     setEditingSection(null);
     setSavedNotice(true);
-    setTimeout(() => setSavedNotice(false), 3000);
   };
 
   return (
@@ -47,7 +76,7 @@ export function ProfileView() {
           </div>
           <div>
             <h3 className="text-sm sm:text-base font-bold text-[var(--text-main)]">
-              Lucas Wallysson
+              {user.name}
             </h3>
             <p className="text-xs text-[var(--text-secondary)] num-tabular mt-0.5">
               CPF: {user.cpf}
@@ -56,7 +85,7 @@ export function ProfileView() {
         </div>
 
         <button
-          onClick={() => setEditingSection(editingSection ? null : "contato")}
+          onClick={() => openEditor(editingSection ? null : "todos")}
           className="btn-secondary px-3.5 h-9 text-xs flex items-center gap-1.5"
         >
           <i className="bi bi-pencil text-[var(--primary)]" />
@@ -65,50 +94,63 @@ export function ProfileView() {
       </div>
 
       {editingSection && (
-        <form onSubmit={handleSave} className="card-surface p-5 space-y-4 text-xs">
-          <h4 className="font-bold text-sm text-[var(--text-main)]">Editar informações</h4>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label className="block font-semibold text-[var(--text-main)] mb-1">Celular</label>
-              <input
-                type="text"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="input-field w-full h-10 px-3"
-              />
-            </div>
-            <div>
-              <label className="block font-semibold text-[var(--text-main)] mb-1">E-mail</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="input-field w-full h-10 px-3"
-              />
-            </div>
-            <div className="sm:col-span-2">
-              <label className="block font-semibold text-[var(--text-main)] mb-1">Endereço</label>
-              <input
-                type="text"
-                value={street}
-                onChange={(e) => setStreet(e.target.value)}
-                className="input-field w-full h-10 px-3"
-              />
-            </div>
-          </div>
-
+        <form key={editingSection} onSubmit={handleSave} className="card-surface p-5 space-y-4 text-xs">
+          {editContact && (
+            <fieldset className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <legend className="mb-3 font-bold text-sm">Contato</legend>
+              <label className="space-y-1 font-semibold">
+                <span>Celular</span>
+                <input name="phone" type="tel" autoComplete="tel" defaultValue={user.phone} required className="input-field w-full h-10 px-3" />
+              </label>
+              <label className="space-y-1 font-semibold">
+                <span>E-mail</span>
+                <input name="email" type="email" autoComplete="email" defaultValue={user.email} required className="input-field w-full h-10 px-3" />
+              </label>
+            </fieldset>
+          )}
+          {editAddress && (
+            <fieldset className="space-y-3">
+              <legend className="mb-3 font-bold text-sm">Endereço</legend>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                {addressFields.map(({ key, label }) => (
+                  <label key={key} className="space-y-1 font-semibold">
+                    <span>{label}</span>
+                    <input
+                      value={address[key] ?? ""}
+                      onChange={(event) => setAddress({ ...address, [key]: event.target.value })}
+                      required={addressChanged && key !== "complement"}
+                      className="input-field w-full h-10 px-3"
+                    />
+                  </label>
+                ))}
+              </div>
+              <p className="text-[var(--text-secondary)]">
+                Para mudar o endereço, anexe os dois documentos. Aceitamos PDF, JPG e PNG.
+              </p>
+              {addressChanged && (
+                <div className="space-y-3">
+                  <label className="block space-y-1 font-semibold">
+                    <span>Comprovante do novo endereço</span>
+                    <input name="residenceProof" type="file" accept=".pdf,.jpg,.jpeg,.png" required className="input-field block w-full p-2" />
+                  </label>
+                  <label className="block space-y-1 font-semibold">
+                    <span>Conta atualizada de luz ou água</span>
+                    <input name="utilityBill" type="file" accept=".pdf,.jpg,.jpeg,.png" required className="input-field block w-full p-2" />
+                  </label>
+                </div>
+              )}
+            </fieldset>
+          )}
+          {formError && <p role="alert" className="text-red-700">{formError}</p>}
           <button type="submit" className="btn-primary px-5 h-10 text-xs">
             Salvar alterações
           </button>
         </form>
       )}
 
-      {/* 4 Profile Rows (Exact match to Image 3) */}
+      {/* Dados do perfil */}
       <div className="space-y-2.5 stagger">
-        <button
-          onClick={() => setEditingSection(editingSection === "pessoais" ? null : "pessoais")}
-          className="card-surface card-interactive w-full p-4 flex items-center justify-between text-left"
-        >
+        <div className="card-surface w-full p-4 text-left">
           <div className="flex items-center gap-3.5">
             <div className="w-9 h-9 rounded-xl bg-[var(--primary-soft)] text-[var(--primary)] flex items-center justify-center shrink-0">
               <i className="bi bi-person text-base" />
@@ -116,15 +158,14 @@ export function ProfileView() {
             <div>
               <p className="text-xs font-bold text-[var(--text-main)]">Dados pessoais</p>
               <p className="text-[11px] text-[var(--text-secondary)] mt-0.5">
-                Nome, CPF, data de nascimento
+                {user.name} · {user.cpf} · {user.birthDate}
               </p>
             </div>
           </div>
-          <i className="bi bi-chevron-right row-chevron inline-block text-xs text-[var(--text-muted)]" />
-        </button>
+        </div>
 
         <button
-          onClick={() => setEditingSection(editingSection === "endereco" ? null : "endereco")}
+          onClick={() => openEditor(editingSection === "endereco" ? null : "endereco")}
           className="card-surface card-interactive w-full p-4 flex items-center justify-between text-left"
         >
           <div className="flex items-center gap-3.5">
@@ -142,7 +183,7 @@ export function ProfileView() {
         </button>
 
         <button
-          onClick={() => setEditingSection(editingSection === "contato" ? null : "contato")}
+          onClick={() => openEditor(editingSection === "contato" ? null : "contato")}
           className="card-surface card-interactive w-full p-4 flex items-center justify-between text-left"
         >
           <div className="flex items-center gap-3.5">
@@ -159,21 +200,6 @@ export function ProfileView() {
           <i className="bi bi-chevron-right row-chevron inline-block text-xs text-[var(--text-muted)]" />
         </button>
 
-        <button
-          onClick={() => setEditingSection(editingSection === "seguranca" ? null : "seguranca")}
-          className="card-surface card-interactive w-full p-4 flex items-center justify-between text-left"
-        >
-          <div className="flex items-center gap-3.5">
-            <div className="w-9 h-9 rounded-xl bg-[var(--primary-soft)] text-[var(--primary)] flex items-center justify-center shrink-0">
-              <i className="bi bi-lock text-base" />
-            </div>
-            <div>
-              <p className="text-xs font-bold text-[var(--text-main)]">Segurança</p>
-              <p className="text-[11px] text-[var(--text-secondary)] mt-0.5">Alterar senha</p>
-            </div>
-          </div>
-          <i className="bi bi-chevron-right row-chevron inline-block text-xs text-[var(--text-muted)]" />
-        </button>
       </div>
     </div>
   );
