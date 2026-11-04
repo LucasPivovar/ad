@@ -7,7 +7,6 @@ import { Header } from "@/components/Header";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { DashboardView } from "@/components/DashboardView";
 import { MyAgreementsView } from "@/components/MyAgreementsView";
-import { MyDebtsView } from "@/components/MyDebtsView";
 import { PaymentsView } from "@/components/PaymentsView";
 import { ProfileView } from "@/components/ProfileView";
 import { SupportView } from "@/components/SupportView";
@@ -65,9 +64,6 @@ function AppShell() {
             )}
             {activeTab === "meus-acordos" && (
               <MyAgreementsView onOpenPaymentModal={handleOpenPayment} />
-            )}
-            {activeTab === "minhas-dividas" && (
-              <MyDebtsView onOpenPaymentModal={handleOpenPayment} />
             )}
             {activeTab === "pagamentos" && (
               <PaymentsView onOpenPaymentModal={handleOpenPayment} />

@@ -32,9 +32,9 @@ interface AppContextType {
   setScreenFlow: (flow: ScreenFlow) => void;
 
   // Aba ativa dentro do Portal Logado
-  activeTab: "inicio" | "meus-acordos" | "minhas-dividas" | "pagamentos" | "perfil" | "suporte";
+  activeTab: "inicio" | "meus-acordos" | "pagamentos" | "perfil" | "suporte";
   setActiveTab: (
-    tab: "inicio" | "meus-acordos" | "minhas-dividas" | "pagamentos" | "perfil" | "suporte"
+    tab: "inicio" | "meus-acordos" | "pagamentos" | "perfil" | "suporte"
   ) => void;
 
   // Modo Cliente Com Acordo vs Cliente Sem Acordo (Imagem 1 & Áudio 1)
@@ -309,7 +309,7 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [screenFlow, setScreenFlow] = useState<ScreenFlow>("portal");
   const [activeTab, setActiveTab] = useState<
-    "inicio" | "meus-acordos" | "minhas-dividas" | "pagamentos" | "perfil" | "suporte"
+    "inicio" | "meus-acordos" | "pagamentos" | "perfil" | "suporte"
   >("inicio");
   const [hasLinkedAgreements, setHasLinkedAgreements] = useState<boolean>(true);
   const [negotiateStep, setNegotiateStep] = useState<NegotiateStep>("none");

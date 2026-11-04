@@ -23,7 +23,6 @@ export function Sidebar() {
       icon: "bi-file-earmark-check",
       badge: agreements.length > 0 ? `${agreements.length}` : null,
     },
-    { id: "minhas-dividas", label: "Minhas Dívidas", icon: "bi-layers", badge: null },
     { id: "pagamentos", label: "Pagamentos", icon: "bi-credit-card", badge: null },
     { id: "perfil", label: "Meu Perfil", icon: "bi-person", badge: null },
     { id: "suporte", label: "Ajuda e Suporte", icon: "bi-headset", badge: null },
